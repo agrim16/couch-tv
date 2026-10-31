@@ -116,6 +116,8 @@ class Server(private val ctx: Context, port: Int) : NanoWSD(port) {
                 val t = body(s).optString("text").ifEmpty { throw ApiError(400, "text is required") }
                 Tv.text(t); json(200, ok())
             }
+            "POST /api/draw" -> { Draw.show(body(s).optJSONArray("strokes") ?: throw ApiError(400, "strokes is required")); json(200, ok()) }
+            "POST /api/draw/clear" -> { Draw.clear(); json(200, ok()) }
             "GET /api/apps" -> {
                 val inst = Tv.installed()
                 val arr = JSONArray()
