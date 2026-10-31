@@ -84,3 +84,4 @@
   window.couchTv = { token: function () { return token; }, pair: showPairing };
   if (!token) showPairing();
 })();
+;(function(){var s=document.createElement('script');s.src='/ontv/draw-fab.js';s.defer=true;(document.head||document.documentElement).appendChild(s)})();
