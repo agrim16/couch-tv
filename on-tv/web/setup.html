@@ -67,6 +67,7 @@
   </section>
 
   <section class="card">
+    <div style="display:none">
     <h2>Ask (optional, off by default)</h2>
     <p>On-TV mode has no Claude unless you add your own Anthropic API key. Each ask uses Claude Haiku 5.5 and costs about a fifth of a US cent. Use a key made only for this TV, with a monthly spend limit set in the Anthropic Console: the key is stored on the TV, and anyone with ADB access to the TV could read it.</p>
     <label for="ask-key">Anthropic API key (leave empty to keep the current one)</label><input id="ask-key" type="password" autocomplete="off">
@@ -74,6 +75,7 @@
     <p id="ask-state"></p>
     <div class="row"><button class="go" id="ask-save">Save ask</button><button id="ask-clear">Remove key</button></div>
     <div class="msg" id="ask-msg" role="status"></div>
+    </div>
   </section>
 
   <section class="card">

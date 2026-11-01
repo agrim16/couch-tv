@@ -120,6 +120,21 @@ class HomeActivity : Activity() {
             }
             return out.toString()
         }
+        @JavascriptInterface fun appsFor(who: String): String {
+            val all = JSONArray(apps())
+            val map = (Store.readJson("profile-apps.json") as? JSONObject) ?: return all.toString()
+            val allow = HashSet<String>()
+            if (who.isEmpty() || who == "both") {
+                for (k in map.keys()) { val a = map.optJSONArray(k) ?: continue; for (i in 0 until a.length()) allow.add(a.optString(i)) }
+            } else {
+                val a = map.optJSONArray(who) ?: return all.toString()
+                for (i in 0 until a.length()) allow.add(a.optString(i))
+            }
+            if (allow.isEmpty()) return all.toString()
+            val out = JSONArray()
+            for (i in 0 until all.length()) { val o = all.getJSONObject(i); if (allow.contains(o.optString("package"))) out.put(o) }
+            return out.toString()
+        }
         @JavascriptInterface fun launch(pkg: String): Boolean {
             val i = packageManager.getLeanbackLaunchIntentForPackage(pkg) ?: packageManager.getLaunchIntentForPackage(pkg) ?: return false
             main.post { runCatching { startActivity(i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } }

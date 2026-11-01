@@ -118,6 +118,27 @@ class Server(private val ctx: Context, port: Int) : NanoWSD(port) {
             }
             "POST /api/draw" -> { Draw.show(body(s).optJSONArray("strokes") ?: throw ApiError(400, "strokes is required")); json(200, ok()) }
             "POST /api/draw/clear" -> { Draw.clear(); json(200, ok()) }
+            "GET /api/launchables" -> {
+                val pm = App.instance.packageManager
+                val arr = JSONArray()
+                Tv.tvLaunchables().filter { it.activityInfo.packageName != App.instance.packageName }
+                    .sortedBy { it.loadLabel(pm).toString().lowercase() }
+                    .forEach { ri -> arr.put(JSONObject().put("package", ri.activityInfo.packageName).put("label", ri.loadLabel(pm).toString())) }
+                json(200, ok().put("apps", arr))
+            }
+            "GET /api/profile-apps" -> {
+                val m = (Store.readJson("profile-apps.json") as? JSONObject) ?: JSONObject()
+                json(200, ok().put("profiles", m).put("people", Store.people()))
+            }
+            "POST /api/profile-apps" -> {
+                val b = body(s)
+                val who = b.optString("who").ifEmpty { throw ApiError(400, "who is required") }
+                val m = (Store.readJson("profile-apps.json") as? JSONObject) ?: JSONObject()
+                val list = b.optJSONArray("apps") ?: JSONArray()
+                if (list.length() == 0) m.remove(who) else m.put(who, list)
+                Store.writeJson("profile-apps.json", m)
+                json(200, ok())
+            }
             "GET /api/apps" -> {
                 val inst = Tv.installed()
                 val arr = JSONArray()
@@ -140,7 +161,7 @@ class Server(private val ctx: Context, port: Int) : NanoWSD(port) {
                     b.optString("service").ifEmpty { null }, b.optString("who").ifEmpty { null })))
             }
             "POST /api/ask" -> {
-                if (!Ask.enabled) throw ApiError(501, "Ask is off in on-TV mode. To switch it on, add your own Anthropic API key on the setup page (it costs a fraction of a cent per ask).")
+                if (true || !Ask.enabled) throw ApiError(501, "Ask is not available.")
                 val b = body(s)
                 json(200, Ask.ask(b.optString("text").ifEmpty { throw ApiError(400, "text is required") }, b.optString("who").ifEmpty { Now.who }))
             }

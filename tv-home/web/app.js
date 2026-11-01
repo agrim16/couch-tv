@@ -778,7 +778,7 @@
     if (id === who) return;
     who = id; s = 0;
     try { localStorage.setItem("tvhome.who", who); } catch (e) {}
-    if (!NOBODY) api("POST", "/api/who", { who: who }).catch(function () {});
+    if (!NOBODY) api("POST", "/api/who", { who: who }).then(function () { location.reload(); }, function () { location.reload(); });
     renderShelf();
   }
   // The order of the names: kept by the bridge (the phone's People sheet uses the same list), or on
@@ -2117,7 +2117,7 @@
   // ---------------- data ----------------
   function nativeApps() {
     var list;
-    try { list = JSON.parse(TV.apps()); } catch (e) { return null; }
+    try { list = JSON.parse(TV.appsFor((function(){try{return localStorage.getItem("tvhome.who")||""}catch(e){return ""}})())); } catch (e) { return null; }
     return list.map(function (a) {
       return { kind: "app", name: RENAME[a.package] ? t(RENAME[a.package]) : a.label, package: a.package,
         banner: TV.bannerUrl ? TV.bannerUrl(a.package) : "http://tvos.invalid/banner/" + a.package };   // the launcher makes one when the app has none

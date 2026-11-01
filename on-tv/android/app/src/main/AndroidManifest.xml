@@ -53,12 +53,15 @@
         <!-- The home screen page. Reachable as a normal screen; it is HOME only through the alias below. -->
         <activity
             android:name=".HomeActivity"
-            android:exported="false"
+            android:exported="true"
             android:launchMode="singleTask"
             android:stateNotNeeded="true"
             android:excludeFromRecents="true"
             android:screenOrientation="landscape"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|smallestScreenSize|uiMode|density|fontScale|locale" />
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|smallestScreenSize|uiMode|density|fontScale|locale"
+            android:label="Couch TV Home">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent-filter>
+        </activity>
 
         <!-- OFF by default, so installing never takes over the home button. "Use as home screen" in setup turns it on. -->
         <activity-alias
