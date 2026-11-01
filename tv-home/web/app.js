@@ -802,7 +802,7 @@
     var anyone = PEOPLE.some(function (p) { return (data.showsBy[p.id] || []).length; });
     // nobody has anything on the go: no empty box, the photo has the space
     $("shelf-section").classList.toggle("empty", !anyone);
-    $("people").classList.toggle("empty", !anyone);
+    $("people").classList.toggle("empty", peopleCount() < 2);
     renderPeople();
     if (!data.shows.length) {
       var name = PEOPLE[whoIndex()].name;
@@ -1103,7 +1103,7 @@
 
   function shelfOn() { return !$("shelf-section").classList.contains("empty"); }
   // the switcher shows for two or more people, and only while someone has something on the go
-  function peopleOn() { return peopleCount() >= 2 && shelfOn(); }
+  function peopleOn() { return peopleCount() >= 2; }
   function toPeople() { zone = "people"; pi = whoIndex(); }
 
   function paintFocus() {
